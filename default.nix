@@ -14,8 +14,8 @@ pkgs.stdenv.mkDerivation {
       python3 $src/convert_font.py "$file" "$out/share/fonts/truetype"
     done
     mkdir -p $out/share/fonts/opentype
-    find $src -type f -name "*.oft" | while read file; do
-      echo "Processing $(basename "$file" .oft)"
+    find $src -type f -name "*.otf" | while read file; do
+      echo "Processing $(basename "$file" .otf)"
       python3 $src/convert_font.py "$file" "$out/share/fonts/opentype"
     done
   '';

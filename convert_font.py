@@ -41,16 +41,11 @@ def convert_to_lowercase(font_path, dest_path):
         table.cmap = new_cmap
 
     for record in font['name'].names:
-        print(record.toUnicode())
         # Yes..probably not the best way to do this, but i am lazy atm
         if "Overpass" in record.toUnicode():
             if "trademark" not in record.toUnicode():
                 if "Copyright" not in record.toUnicode():
                     new_name = record.toUnicode().replace("Overpass", "Underpass")
-                    if record.isUnicode():
-                        new_name_bytes = new_name.encode('utf-16-be')
-                    else:
-                        new_name_bytes = new_name.encode('latin1')
                     record.string = new_name
 
 
