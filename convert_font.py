@@ -9,7 +9,7 @@ def convert_to_lowercase(font_path, dest_path):
     standard_uppercase_ranges = [(65, 90), (192, 223), (1040, 1071)]  # Add more ranges if needed
 
     # Define the ranges of characters where every alternate character needs a +1 offset
-    alternate_uppercase_ranges_even = [(256, 311), (313, 328), (330, 375), (377, 382), (461, 476), (478,495), (504, 539), (550, 563), (1122, 1228), (1232, 1309),(7684,7827),(7840,7929)]  # Fill in with actual ranges
+    alternate_uppercase_ranges = [(256, 311), (313, 328), (330, 375), (377, 382), (461, 476), (478,495), (504, 539), (550, 563), (1122, 1228), (1232, 1309),(7684,7827),(7840,7929)]  # Fill in with actual ranges
 
 
     for table in font['cmap'].tables:
@@ -22,7 +22,7 @@ def convert_to_lowercase(font_path, dest_path):
                 new_char_code = char_code + 32
             
             # Check if the character is in the alternate range
-            for lower, upper in alternate_uppercase_ranges_even:
+            for lower, upper in alternate_uppercase_ranges:
                 if lower <= char_code <= upper:
                     # Apply +1 offset to every alternate character
                     if (char_code - lower) % 2 == 0:
@@ -39,6 +39,20 @@ def convert_to_lowercase(font_path, dest_path):
                 new_cmap[char_code] = glyph_name
         
         table.cmap = new_cmap
+
+    for record in font['name'].names:
+        print(record.toUnicode())
+        # Yes..probably not the best way to do this, but i am lazy atm
+        if "Overpass" in record.toUnicode():
+            if "trademark" not in record.toUnicode():
+                if "Copyright" not in record.toUnicode():
+                    new_name = record.toUnicode().replace("Overpass", "Underpass")
+                    if record.isUnicode():
+                        new_name_bytes = new_name.encode('utf-16-be')
+                    else:
+                        new_name_bytes = new_name.encode('latin1')
+                    record.string = new_name
+
 
     new_font_path = dest_path + '/' +  os.path.basename(font_path.replace(".ttf", "_lowercase.ttf").replace(".otf", "_lowercase.otf").replace("Overpass", "Underpass"))
     font.save(new_font_path)
