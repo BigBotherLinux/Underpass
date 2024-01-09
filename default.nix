@@ -18,6 +18,9 @@ pkgs.stdenv.mkDerivation {
       echo "Processing $(basename "$file" .otf)"
       python3 $src/convert_font.py "$file" "$out/share/fonts/opentype"
     done
+    install -Dm644 */*/*.otf -t $out/share/fonts/opentype
+    install -Dm644 */*/*.ttf -t $out/share/fonts/truetype
+    runHook postInstall
   '';
 
   meta = {
